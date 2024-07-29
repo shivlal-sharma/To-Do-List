@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .main {
+            height: 40vh;
+            width: 50vw;
+            padding: 10px;
+            box-shadow: 0px 0px 15px rgb(0, 106, 255);
+            border-radius: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 3px 5px;
+            border: 1px solid gray;
+            outline: none;
+            border-radius: 3px;
+            font-size: 1.1rem;
+        }
+
+        .display {
+            background-color: rgb(32, 64, 151);
+            color: #fff;
+            border: 1px solid grey;
+            padding: 3px 5px;
+            outline: none;
+            border-radius: 3px;
+            margin: 10px 0px;
+            font-size: 1.1rem;
+            position: relative;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .done {
+            background-color: black;
+        }
+
+        i {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="main">
+            <input type="text" id="text" placeholder="Write something here...">
+        </div>
+    </div>
+    <script>
+        let inputField = document.querySelector('#text');
+        let main = document.querySelector('.main');
+        let div = document.querySelector('.display');
+
+        inputField.addEventListener('keyup', (event) => {
+            if (event.key == 'Enter') {
+                addToDo(inputField.value);
+                inputField.value = '';
+            }
+        });
+
+        const addData = ()=>{
+                let tlists = document.querySelectorAll('.display');
+                let data = [];
+                tlists.forEach((text) => {
+                    data.push(text.innerText);
+                });
+
+                localStorage.setItem('todolists', JSON.stringify(data));
+        }
+
+        const addToDo = (item) => {
+            let text = document.createElement('div');
+            text.classList.add('display');
+            text.innerHTML = `${item} <i class="fa fa-times"></i>`;
+            main.appendChild(text);
+
+            text.querySelector('i').addEventListener('click', () => {
+                text.remove();
+            });
+
+            text.addEventListener('click', () => {
+                text.classList.toggle('done');
+                addData();
+            });
+        }
+
+        const addNote = (val)=>{
+            let texts = document.createElement('div');
+            texts.classList.add('display');
+            texts.innerHTML = `${val} <i class="fa fa-times"></i>`;
+            main.appendChild(texts);
+
+            texts.querySelector('i').addEventListener('click',()=>{
+                texts.remove();
+                addData();
+            });
+        }
+
+        const getData = () => {
+            let todolist = JSON.parse(localStorage.getItem('todolists'));
+            todolist.forEach((tdlist) => {
+                addNote(tdlist);
+            });
+            localStorage.setItem('todolists',JSON.stringify(todolist));
+        }
+
+        getData()
+    </script>
+</body>
+
+</html>
